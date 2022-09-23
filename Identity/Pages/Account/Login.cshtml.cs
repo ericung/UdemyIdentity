@@ -32,7 +32,7 @@ namespace Identity.Pages.Account
                     new Claim("Department","HR"),
                     new Claim("Admin","true"),
                     new Claim("Manager","true"),
-                    new Claim("EmploymentDate","2022-09-19")
+                    new Claim("EmploymentDate","2022-01-19")
                 };
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);

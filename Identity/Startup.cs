@@ -46,6 +46,11 @@ namespace WebApp_UnderTheHood
             });
             services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
             services.AddRazorPages();
+            services.AddHttpClient("OurWebAPI",
+                client =>
+                {
+                    client.BaseAddress = new Uri("https://localhost:7234/");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
