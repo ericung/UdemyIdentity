@@ -42,7 +42,6 @@ namespace IdentityApp.Pages.Account
                 var confirmationToken = await UserManager.GenerateEmailConfirmationTokenAsync(user);
                 return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
                     values: new { userId = user.Id, token = confirmationToken }));
-                //return RedirectToPage("/Account/Login");
             }
             else
             {
