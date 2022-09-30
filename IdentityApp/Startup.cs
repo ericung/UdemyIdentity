@@ -1,4 +1,6 @@
 using IdentityApp.Data;
+using IdentityApp.Services;
+using IdentityApp.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +41,10 @@ namespace IdentityApp
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
+
+            services.Configure<SmtpSetting>(Configuration.GetSection("SMTP"));
+
+            services.AddSingleton<IEmailService, EmailService>();
 
             services.AddRazorPages();
         }

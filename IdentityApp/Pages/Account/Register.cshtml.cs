@@ -1,3 +1,4 @@
+using IdentityApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,14 +10,17 @@ namespace IdentityApp.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        public RegisterModel(UserManager<IdentityUser> userManager)
+        public RegisterModel(UserManager<IdentityUser> userManager,
+            IEmailService emailService)
         {
             UserManager = userManager;
+            EmailService = emailService;
         }
 
         [BindProperty]
         public RegisterViewModel RegisterViewModel { get; set; }
         public UserManager<IdentityUser> UserManager { get; }
+        public IEmailService EmailService { get; }
 
         public void OnGet()
         {
@@ -45,19 +49,10 @@ namespace IdentityApp.Pages.Account
                 var confirmationLink = Url.PageLink(pageName: "/Account/ConfirmEmail",
                     values: new { userId = user.Id, token = confirmationToken });
 
-                var message = new MailMessage("ungericwei@gmail.com",
+                await EmailService.SendAsync("ungericwei@gmail.com",
                     user.Email,
                     "Please confirm your email",
-                    $"Please click on this link to confirm your email: {confirmationLink}");
-
-                using (var emailClient = new SmtpClient("smtp-relay.sendinblue.com", 587))
-                {
-                    emailClient.Credentials = new NetworkCredential(
-                        "ungericwei@gmail.com",
-                        "--");
-
-                    await emailClient.SendMailAsync(message);
-                }
+                    $"Please click on this link to confirm your email address: {confirmationLink}");
 
                 return RedirectToPage("/Account/Login");
             }
