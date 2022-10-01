@@ -1,4 +1,5 @@
 using IdentityApp.Data;
+using IdentityApp.Data.Account;
 using IdentityApp.Services;
 using IdentityApp.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@ namespace IdentityApp
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;
                 options.Password.RequireLowercase = true;

@@ -1,3 +1,4 @@
+using IdentityApp.Data.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,14 +8,14 @@ namespace IdentityApp.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        public LoginModel(SignInManager<IdentityUser> signInManager)
+        public LoginModel(SignInManager<User> signInManager)
         {
             SignInManager = signInManager;
         }
 
         [BindProperty]
         public CredentialViewModel Credential { get; set; }
-        public SignInManager<IdentityUser> SignInManager { get; }
+        public SignInManager<User> SignInManager { get; }
 
         public void OnGet()
         {
