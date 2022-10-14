@@ -1,4 +1,5 @@
 using IdentityApp.Data.Account;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,24 +9,28 @@ namespace IdentityApp.Pages.Account
 {
     public class LoginModel : PageModel
     {
+        private SignInManager<User> signInManager;
         public LoginModel(SignInManager<User> signInManager)
         {
-            SignInManager = signInManager;
+            this.signInManager = signInManager;
         }
 
         [BindProperty]
         public CredentialViewModel Credential { get; set; }
-        public SignInManager<User> SignInManager { get; }
 
-        public void OnGet()
+        [BindProperty]
+        public IEnumerable<AuthenticationScheme> ExternalLoginProviders { get; set; }
+
+        public async Task OnGetAsync()
         {
+            this.ExternalLoginProviders = await signInManager.GetExternalAuthenticationSchemesAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid) return Page();
 
-            var result = await SignInManager.PasswordSignInAsync(
+            var result = await this.signInManager.PasswordSignInAsync(
                 this.Credential.Email, 
                 this.Credential.Password, 
                 this.Credential.RememberMe,
@@ -57,6 +62,13 @@ namespace IdentityApp.Pages.Account
 
                 return Page();
             }
+        }
+
+        public IActionResult OnPostLoginExternally(string provider)
+        {
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider,null);
+            properties.RedirectUri = Url.Action("ExternalLoginCallback", "Account");
+            return Challenge(properties, provider);
         }
     }
 
